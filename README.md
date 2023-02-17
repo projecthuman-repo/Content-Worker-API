@@ -22,6 +22,40 @@ pip install "uvicorn[standard]"
 ```
 Alternative ASGI server - ([Hypercorn](https://github.com/pgjones/hypercorn))
 
+
+## Creating Virtual Enviroment
+ 
+ Run Command to Create Enviroment
+ ```
+ python3 -m venv .venv
+ ```
+
+## Starting the Python Enviroment 
+
+Main Command:
+```
+.venv/Scripts/activate
+```
+
+If Error states "cannot be loaded because running scripts is disabled on this system" run this command first 
+```
+Set-ExecutionPolicy Unrestricted -Scope Process
+```
+
+## Stopping the Python Enviroment 
+
+Main Command:
+```
+deactivate
+```
+
+## Install All Packages
+
+Command:
+```
+pip3 install -r .\packages.txt
+```
+
 ## Running The Server (For Development)
 
 Main Command:
