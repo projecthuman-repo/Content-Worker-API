@@ -11,7 +11,12 @@ For Windows, use [Microsoft Store](https://www.microsoft.com/store/productId/9PJ
 
 ## Module Installations
 
-FastAPI:
+Use this command to install all the modules automatically (Like npm install):
+```
+pip install -r .\packages.txt
+```
+<br /><i>Ignore these standalone commands if you have used the above command.</i><br />
+<br />FastAPI:
 ```
 pip install fastapi
 ```
@@ -21,40 +26,6 @@ ASGI server - (Tested with [Uvicorn](https://www.uvicorn.org/)):
 pip install "uvicorn[standard]"
 ```
 Alternative ASGI server - ([Hypercorn](https://github.com/pgjones/hypercorn))
-
-
-## Creating Virtual Enviroment
- 
- Run Command to Create Enviroment
- ```
- python3 -m venv .venv
- ```
-
-## Starting the Python Enviroment 
-
-Main Command:
-```
-.venv/Scripts/activate
-```
-
-If Error states "cannot be loaded because running scripts is disabled on this system" run this command first 
-```
-Set-ExecutionPolicy Unrestricted -Scope Process
-```
-
-## Stopping the Python Enviroment 
-
-Main Command:
-```
-deactivate
-```
-
-## Install All Packages
-
-Command:
-```
-pip3 install -r .\packages.txt
-```
 
 ## Running The Server (For Development)
 
