@@ -1,2 +1,6 @@
 fastapi
 uvicorn[standard]
+alt-profanity-check
+python-multipart
+Pillow
+moviepy
