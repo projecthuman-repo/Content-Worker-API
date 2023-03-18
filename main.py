@@ -10,6 +10,11 @@ from pydantic import BaseModel
 class InstantTextVerification(BaseModel):
     text: str
 
+class ContentDetails(BaseModel):
+    documentID: str
+    contentUrl: str
+    contentDetails = {}
+
 app = FastAPI()
 
 # Base route returning an object of hello world
@@ -31,6 +36,11 @@ def read_root(request: InstantTextVerification):
     else:
         return {"result": "pass"}
 
+
+@app.post("/moderate")
+def read_root(request: ContentDetails):
+    urlToDownload = request.contentUrl
+    
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
