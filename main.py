@@ -3,6 +3,7 @@ from typing import Union
 from fastapi import FastAPI
 from profanity_check import predict
 from pydantic import BaseModel
+from modules.downloader import downloadFile
 
 # Temporary schema
 # Need to work on the instant text verification request schema 
@@ -40,6 +41,7 @@ def read_root(request: InstantTextVerification):
 @app.post("/moderate")
 def read_root(request: ContentDetails):
     urlToDownload = request.contentUrl
+    downloadFile(urlToDownload)
     
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
