@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from profanity_check import predict
 from pydantic import BaseModel
 from modules.downloader import downloadFile
+from modules.typeFinder import findFileType
 
 # Temporary schema
 # Need to work on the instant text verification request schema 
@@ -46,6 +47,8 @@ def read_root(request: InstantTextVerification):
 def read_root(request: ContentDetails):
     urlToDownload = request.contentUrl
     downloadResult = downloadFile(urlToDownload)
+
+    findFileType("downloadedFile")
 
     if downloadResult == "downloadedFile":
         return {"response": True}
