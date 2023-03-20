@@ -41,7 +41,12 @@ def read_root(request: InstantTextVerification):
 @app.post("/moderate")
 def read_root(request: ContentDetails):
     urlToDownload = request.contentUrl
-    downloadFile(urlToDownload)
+    downloadResult = downloadFile(urlToDownload)
+
+    if downloadResult == "downloadedFile":
+        return {"response": True}
+    else:
+        return {"response": False}
     
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
