@@ -5,6 +5,7 @@ from profanity_check import predict
 from pydantic import BaseModel
 from modules.downloader import downloadFile
 from modules.typeFinder import findFileType
+from modules.transcriber import transcribeAudio
 
 # Temporary schema
 # Need to work on the instant text verification request schema 
@@ -49,6 +50,7 @@ def read_root(request: ContentDetails):
     downloadResult = downloadFile(urlToDownload)
 
     findFileType("downloadedFile")
+    transcribeAudio("downloadedFile")
 
     if downloadResult == "downloadedFile":
         return {"response": True}
