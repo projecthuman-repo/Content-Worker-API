@@ -3,7 +3,7 @@ import speech_recognition as sr
 # TEST SETUP for the audio transcriber.
 # Will need additional setup to work with incoming requests/convert/download audio files appropriately.
 
-# to transcribe audio filename
+# Variable containing the filename to be transcribed
 AUDIO_FILE = "transcript.wav"
 
 def transcribeAudio():

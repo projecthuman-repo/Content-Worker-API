@@ -3,7 +3,7 @@ import urllib.request
 ### MODULE DESCRIPTION ###
 # Downloads a file from a defined URL and stores it in the project's root directory.
 
-# Define an asynchronous function with a passed in url
+# Define a function with a passed in url
 def downloadFile(url):
     print("Downloading File From: " + url)
 
