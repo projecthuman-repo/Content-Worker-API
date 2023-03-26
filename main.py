@@ -24,18 +24,12 @@ from contentHandler import contentHandler
 class InstantTextVerification(BaseModel):
     text: str
 
-# Supplemental class to ContentDetails
-class Details():
-    contentType: str
-    contentLength: int
-    timestamp: str
-
 # Main class containing all the necessary information about 
 # content to moderate, with documentID for state management
 class ContentDetails(BaseModel):
     documentID: str
     contentUrl: str
-    contentDetails = Details | None
+    contentDetails: dict
 
 ##############
 ### ROUTES ###
