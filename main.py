@@ -1,11 +1,10 @@
 from typing import Union
 
+import re
 from fastapi import FastAPI
-from profanity_check import predict
 from pydantic import BaseModel
-from modules.downloader import downloadFile
-from modules.typeFinder import findFileType
-from modules.transcriber import transcribeAudio
+from profanity_check import predict
+from contentHandler import contentHandler
 
 # Temporary schema
 # Need to work on the instant text verification request schema 
@@ -46,11 +45,20 @@ def read_root(request: InstantTextVerification):
 # method will send the moderated result to the Client-Facing API for DB updates.
 @app.post("/moderate")
 def read_root(request: ContentDetails):
-
-    # if downloadResult == "downloadedFile":
-    #     return {"response": True}
-    # else:
-    #     return {"response": False}
+    URLValidationREGEX = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    
+    if re.match(URLValidationREGEX, request.contentUrl):
+        contentHandler(request)
+        
+        return {"response": True}
+    else:
+        return {"response": False}
     
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
