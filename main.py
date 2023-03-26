@@ -38,13 +38,15 @@ def read_root(request: InstantTextVerification):
     else:
         return {"result": "pass"}
 
-# Receives a POST request with a JSON payload, which contains the ContentDetails
-# for the content to be moderated, and management of state to return a response
-# back whether the URL was valid or not.
-# Based on the document ID, it will be currently used to track states and a callback
-# method will send the moderated result to the Client-Facing API for DB updates.
 @app.post("/moderate")
 def read_root(request: ContentDetails):
+    """Returns a JSON Object
+    
+    The function validates the contentURL coming from the request for validity, then
+    calls the contentHandler to offload the moderation part. Based on the result of
+    the regex validator, a JSON object is returned.
+    """
+    
     URLValidationREGEX = re.compile(
         r'^(?:http|ftp)s?://' # http:// or https://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
