@@ -1,7 +1,13 @@
 import speech_recognition as sr
 
-# TEST SETUP for the audio transcriber.
-# Will need additional setup to work with incoming requests/convert/download audio files appropriately.
+##########################
+### MODULE DESCRIPTION ###
+##########################
+
+# This file contains a function that uses the speech_recognition library to 
+# transcribe an audio file. The function takes the filename of the audio file 
+# as input, reads the entire file, and returns the transcribed text using 
+# Google's speech recognition API.
 
 def transcribeAudio(audioFileName):
     r = sr.Recognizer()

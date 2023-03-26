@@ -1,12 +1,14 @@
 import os
 import magic
 
+##########################
 ### MODULE DESCRIPTION ###
-# Figures out the extension or the file type
+##########################
 
-# Based on the filename passed as argument, this method checks whether the file 
-# currently has a type, if so return that, otherwise we use the magic library to 
-# detect the correct file type to return.
+# This file contains a module that determines the file type based on the filename 
+# passed as an argument, checking whether the file currently has a type or using 
+# the magic library to detect the correct file type.
+
 def findFileType(filename):
     file_type: str
 

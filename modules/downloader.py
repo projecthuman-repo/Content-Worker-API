@@ -1,9 +1,13 @@
 import urllib.request
 
+##########################
 ### MODULE DESCRIPTION ###
-# Downloads a file from a defined URL and stores it in the project's root directory.
+##########################
 
-# Define a function with a passed in url
+# This file contains a module that downloads a file from a given URL and 
+# saves it in the project's root directory with the name 'downloadedFile' 
+# and without an extension.
+
 def downloadFile(url):
     print("Downloading File From: " + url)
 

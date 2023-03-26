@@ -6,37 +6,63 @@ from pydantic import BaseModel
 from profanity_check import predict
 from contentHandler import contentHandler
 
-# Temporary schema
-# Need to work on the instant text verification request schema 
-# (may also stay the same)
+########################
+### FILE DESCRIPTION ###
+########################
+
+# This file contains a Python FastAPI web application with three routes: 
+# one to validate and moderate text, another to validate and moderate 
+# arbitrary content based on its URL, and a third to manage queries within 
+# the request URL. The application also includes several Pydantic models 
+# for request and response validation.
+
+###########################
+### CLASS BASED SCHEMAS ###
+###########################
+
+# Simple class for instant verification of text based content
 class InstantTextVerification(BaseModel):
     text: str
 
+# Supplemental class to ContentDetails
+class Details():
+    contentType: str
+    contentLength: int
+    timestamp: str
+
+# Main class containing all the necessary information about 
+# content to moderate, with documentID for state management
 class ContentDetails(BaseModel):
     documentID: str
     contentUrl: str
-    contentDetails = {}
+    contentDetails = Details | None
 
+##############
+### ROUTES ###
+##############
 app = FastAPI()
 
-# Base route returning an object of hello world
 @app.get("/")
 def read_root():
+    # Base route to return the current Version Number
     return "PHC: Content Moderation Server - Version 0.1"
 
-# Receives a POST request with a text payload, performs a moderation 
-# check on the text using a machine learning model (via the predict() function), 
-# and returns a pass/fail result based on the model's prediction.
 @app.post("/moderate/text")
 def read_root(request: InstantTextVerification):
+    """Returns a JSON Object
+    
+    The function parses the string from the request and runs it through the profanity
+    checker library, based on the result the approapriate result is returned.
+    """
+
     stringToCheck = request.text
     result = predict([stringToCheck])
 
     # Simple check to see if the check passed or failed
     if (result == [1]):
-        return {"result": "fail"}
+        return {"validationResult": False}
     else:
-        return {"result": "pass"}
+        return {"validationResult": True}
 
 @app.post("/moderate")
 def read_root(request: ContentDetails):
