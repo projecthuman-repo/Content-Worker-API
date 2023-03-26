@@ -46,16 +46,11 @@ def read_root(request: InstantTextVerification):
 # method will send the moderated result to the Client-Facing API for DB updates.
 @app.post("/moderate")
 def read_root(request: ContentDetails):
-    urlToDownload = request.contentUrl
-    downloadResult = downloadFile(urlToDownload)
 
-    findFileType("downloadedFile")
-    transcribeAudio("downloadedFile")
-
-    if downloadResult == "downloadedFile":
-        return {"response": True}
-    else:
-        return {"response": False}
+    # if downloadResult == "downloadedFile":
+    #     return {"response": True}
+    # else:
+    #     return {"response": False}
     
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
