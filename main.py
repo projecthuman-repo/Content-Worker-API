@@ -58,9 +58,9 @@ def read_root(request: ContentDetails):
     if re.match(URLValidationREGEX, request.contentUrl):
         contentHandler(request)
         
-        return {"response": True}
+        return {"validationResult": True}
     else:
-        return {"response": False}
+        return {"validationResult": False}
     
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
