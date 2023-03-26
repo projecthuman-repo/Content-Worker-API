@@ -7,12 +7,15 @@ from modules.typedetection import router as typedetection_router
 from modules.image_converter import router as image_converter_router
 from modules.video_converter import router as video_converter_router
 from modules.video_framespliter import router as video_framespliter_router
+from modules.image_moderation import router as  image_moderation_router
+from modules.image_ocr import router as  image_ocr_router
 
 # Temporary schema
 # Need to work on the instant text verification request schema 
 # (may also stay the same)
 class InstantTextVerification(BaseModel):
     text: str
+    
 app = FastAPI()
 
 # Base route returning an object of hello world
@@ -33,12 +36,15 @@ def read_root(request: InstantTextVerification):
         return {"result": "fail"}
     else:
         return {"result": "pass"}
+    
 
 ## Temp Routes for testing type detection and file conversion ##
 app.include_router(typedetection_router) ## Check the File type that is being recieved
 app.include_router(image_converter_router) ## Convert the image url to a acceptable type 
 app.include_router(video_converter_router) ## Convert the video to a wav for transcrbing
 app.include_router(video_framespliter_router) ## Split Video frames from image moderation
+app.include_router(image_moderation_router) ## image moderation
+app.include_router(image_ocr_router) ## image moderation
 ############################################################
 
 

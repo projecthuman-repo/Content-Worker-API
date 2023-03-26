@@ -1,12 +1,14 @@
 import io
 from PIL import Image
 import httpx
-from fastapi import FastAPI, Response ,APIRouter
+from fastapi import APIRouter
+import pytesseract
+
 
 router = APIRouter()
 
-@router.post("/converter/image")
-async def image_conversion_to_jpeg(url: str):
+@router.post("/image_ocr")
+async def image_ocr(url: str):
     async with httpx.AsyncClient() as client:
         response = await client.get(url)
 
@@ -23,13 +25,8 @@ async def image_conversion_to_jpeg(url: str):
         #open image file
         image = Image.open(io.BytesIO(response.content))
 
-        #convert image
-        jpeg_image = image.convert("RGB")
-        buffer = io.BytesIO()
+        # Convert Image to text 
+        text = pytesseract.image_to_string(image)
 
-        #save image as a JPEG
-        jpeg_image.save(buffer, format="JPEG")
-        buffer.seek(0)
-
-        #Return final converted Image
-        return Response(content=buffer.getvalue(), media_type="image/jpeg")
+        #Return Transcribed Text
+        return {"text": text}

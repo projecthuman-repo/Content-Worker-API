@@ -6,3 +6,8 @@ Pillow
 moviepy
 opencv-python
 httpx
+tensorflow-macos
+nudepy
+pytesseract
+
+
