@@ -1,2 +1,5 @@
 fastapi
 uvicorn[standard]
+alt-profanity-check
+SpeechRecognition
+python-magic-bin==0.4.14
