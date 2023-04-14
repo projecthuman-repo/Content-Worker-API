@@ -15,17 +15,6 @@ Use this command to install all the modules automatically (Like npm install):
 ```
 pip install -r .\packages.txt
 ```
-<br /><i>Ignore these standalone commands if you have used the above command.</i><br />
-<br />FastAPI:
-```
-pip install fastapi
-```
-
-ASGI server - (Tested with [Uvicorn](https://www.uvicorn.org/)):
-```
-pip install "uvicorn[standard]"
-```
-Alternative ASGI server - ([Hypercorn](https://github.com/pgjones/hypercorn))
 
 ## Running The Server (For Development)
 

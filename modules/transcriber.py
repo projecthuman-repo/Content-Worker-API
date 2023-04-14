@@ -9,6 +9,7 @@ import speech_recognition as sr
 # as input, reads the entire file, and returns the transcribed text using 
 # Google's speech recognition API.
 
+
 async def transcribeAudio(audioFileName):
     r = sr.Recognizer()
     
@@ -19,7 +20,6 @@ async def transcribeAudio(audioFileName):
             audio = r.record(source)
             transcribed_text = r.recognize_google(audio)
             return transcribed_text
-        
     except sr.UnknownValueError:
         print("Error: No legible speech exists in this audio file.")
         return "UnknownValueError"

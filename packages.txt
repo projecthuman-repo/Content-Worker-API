@@ -10,3 +10,4 @@ tensorflow-macos
 nudepy
 pytesseract
 SpeechRecognition
+python-magic-bin==0.4.14
