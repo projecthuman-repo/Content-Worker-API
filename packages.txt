@@ -9,5 +9,4 @@ httpx
 tensorflow-macos
 nudepy
 pytesseract
-
-
+SpeechRecognition

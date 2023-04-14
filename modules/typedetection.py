@@ -1,11 +1,19 @@
-import httpx
+import aiohttp
 from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.post("/typedetection")
-async def type_detection(url: str):
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        content_type = response.headers.get('content-type')
-    return {"content_type": content_type}
+async def type_detection(downloadResult):
+    url = (await downloadResult)['downloadedFilePath']
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, timeout=5) as response:
+            fileType = response.headers.get('content-type')
+            if fileType.startswith('image'):
+                print('Detected file type: jpeg')
+                return 'image'
+            elif fileType.startswith('video'):
+                print('Detected file type: mp4')
+                return 'video'
+            else:
+                print('Detected file type: unknown')
+                return 'unknown'
