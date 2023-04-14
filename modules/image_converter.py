@@ -33,3 +33,4 @@ async def image_conversion_to_jpeg(url: str):
 
         #Return final converted Image
         return Response(content=buffer.getvalue(), media_type="image/jpeg")
+    

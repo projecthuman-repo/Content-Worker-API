@@ -23,3 +23,4 @@ async def transcribeAudio(audioFileName):
     except sr.UnknownValueError:
         print("Error: No legible speech exists in this audio file.")
         return "UnknownValueError"
+    

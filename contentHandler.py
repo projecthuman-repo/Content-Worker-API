@@ -33,4 +33,3 @@ def contentHandler(contentDetails):
             print("Image Result:",  results)
         else:
             print("Unable to classify image:", results)
-

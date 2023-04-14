@@ -30,3 +30,4 @@ async def image_ocr(url: str):
 
         #Return Transcribed Text
         return {"text": text}
+    

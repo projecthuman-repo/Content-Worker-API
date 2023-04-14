@@ -29,7 +29,3 @@ async def classify_image(image_url: str):
             return {"SFW"}
     except Exception as e:
         return {"error": str(e)}
-
-
-
-

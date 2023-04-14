@@ -90,8 +90,6 @@ def read_root(request: ContentDetails):
         return {"validationResult": False}
 
 
-
-
 ## Temp Routes for testing type detection and file conversion ##
 app.include_router(typedetection_router) ## Check the File type that is being recieved
 app.include_router(image_converter_router) ## Convert the image url to a acceptable type 

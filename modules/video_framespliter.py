@@ -6,7 +6,6 @@ from fastapi import APIRouter, File, UploadFile
 
 router = APIRouter()
 
-
 @router.post("/video-to-frames")
 async def video_to_frames(video_url: str):
     
