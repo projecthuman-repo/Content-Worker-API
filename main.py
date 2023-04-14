@@ -1,10 +1,16 @@
-from typing import Union
-
 import re
-from fastapi import FastAPI
+from typing import Union
+from fastapi import FastAPI, UploadFile ,File ,Response
 from pydantic import BaseModel
 from profanity_check import predict
 from contentHandler import contentHandler
+
+from modules.typedetection import router as typedetection_router
+from modules.image_converter import router as image_converter_router
+from modules.video_converter import router as video_converter_router
+from modules.video_framespliter import router as video_framespliter_router
+from modules.image_moderation import router as  image_moderation_router
+from modules.image_ocr import router as  image_ocr_router
 
 ########################
 ### FILE DESCRIPTION ###
@@ -36,28 +42,29 @@ class ContentDetails(BaseModel):
 ##############
 app = FastAPI()
 
+# Base route returning an object of hello world
 @app.get("/")
 def read_root():
-    # Base route to return the current Version Number
     return "PHC: Content Moderation Server - Version 0.1"
 
+
+
+# Receives a POST request with a text payload, performs a moderation 
+# check on the text using a machine learning model (via the predict() function), 
+# and returns a pass/fail result based on the model's prediction.
 @app.post("/moderate/text")
 def read_root(request: InstantTextVerification):
-    """Returns a JSON Object
-    
-    The function parses the string from the request and runs it through the profanity
-    checker library, based on the result the approapriate result is returned.
-    """
-
     stringToCheck = request.text
     result = predict([stringToCheck])
 
     # Simple check to see if the check passed or failed
     if (result == [1]):
-        return {"validationResult": False}
+        return {"result": "fail"}
     else:
-        return {"validationResult": True}
+        return {"result": "pass"}
+    
 
+    
 @app.post("/moderate")
 def read_root(request: ContentDetails):
     """Returns a JSON Object
@@ -81,7 +88,18 @@ def read_root(request: ContentDetails):
         return {"validationResult": True}
     else:
         return {"validationResult": False}
-    
+
+
+## Temp Routes for testing type detection and file conversion ##
+app.include_router(typedetection_router) ## Check the File type that is being recieved
+app.include_router(image_converter_router) ## Convert the image url to a acceptable type 
+app.include_router(video_converter_router) ## Convert the video to a wav for transcrbing
+app.include_router(video_framespliter_router) ## Split Video frames from image moderation
+app.include_router(image_moderation_router) ## image moderation
+app.include_router(image_ocr_router) ## image moderation
+############################################################
+
+
 # Route to manage queries within the request URL
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):

@@ -1,5 +1,13 @@
 fastapi
 uvicorn[standard]
 alt-profanity-check
+python-multipart
+Pillow
+moviepy
+opencv-python
+httpx
+tensorflow-macos
+nudepy
+pytesseract
 SpeechRecognition
 python-magic-bin==0.4.14

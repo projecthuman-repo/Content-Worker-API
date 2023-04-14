@@ -1,6 +1,8 @@
 from modules.downloader import downloadFile
 from modules.typeFinder import findFileType
 from modules.transcriber import transcribeAudio
+from modules.image_converter import image_conversion_to_jpeg
+from modules.image_moderation import classify_image
 
 ########################
 ### FILE DESCRIPTION ###
@@ -13,10 +15,21 @@ from modules.transcriber import transcribeAudio
 
 def contentHandler(contentDetails):
     urlToDownload = contentDetails.contentUrl
-    downloadResult = downloadFile(urlToDownload)
+    downloadResult =  downloadFile(urlToDownload)
+    downloadedFileType=  findFileType(downloadResult)
+    print("Type: ", downloadedFileType)
 
-    downloadedFileType: findFileType(downloadResult)
-
-    if "WAVE" or ".wav" in downloadedFileType:
+    if "x-wav" in downloadedFileType:
         print("Audio File Detected - Sending for transcription...")
-        transcribeAudio("downloadedFile")
+        transcription =   transcribeAudio(downloadResult)
+        print("Transcription: ", transcription)
+
+
+    elif "image" in downloadedFileType or ".jpeg" in downloadedFileType:
+        print("Image File Detected - Processing...")
+        convertedimage= image_conversion_to_jpeg(downloadResult)
+        results=  classify_image(contentDetails.contentUrl)
+        if results!=0:
+            print("Image Result:",  results)
+        else:
+            print("Unable to classify image:", results)
