@@ -1,21 +1,30 @@
-import urllib.request
+import aiohttp
+from fastapi import HTTPException
 
-##########################
-### MODULE DESCRIPTION ###
-##########################
-
-# This file contains a module that downloads a file from a given URL and 
-# saves it in the project's root directory with the name 'downloadedFile' 
-# and without an extension.
-
-def downloadFile(url):
+async def downloadFile(url):
     print("Downloading File From: " + url)
-
-    # Use the urlretrieve method of the urllib.request module to download the file
-    # The downloaded file will be saved in the root directory with the name 'downloadedFile' and without an extension
-    # The returned tuple contains the path to the newly created data file as well as the resulting HTTPMessage object, if needed.
     try:
-        return urllib.request.urlretrieve(url, "downloadedFile")[0]
-    except urllib.error.HTTPError:
-        print("Error: Unable to download file, invalid URL.")
-        return "Invalid Error"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=20) as response:  # Add a timeout
+                if response.status == 200:
+                    file_path = "downloadedFile"  # Define the path *before* opening the file
+                    with open(file_path, "wb") as f:
+                        while True:
+                            chunk = await response.content.readany()
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                    return file_path  # Return the path, not the tuple
+                elif response.status == 403:  # Check for Forbidden
+                    print(f"Error: Forbidden (403) - Unable to download file from {url}")
+                    raise HTTPException(status_code=403, detail="Forbidden: Unable to download file")  # Raise HTTP exception
+                else:
+                    print(f"Error: Unable to download file from {url}, status code: {response.status}")
+                    raise HTTPException(status_code=response.status, detail=f"Download failed: {response.status}") # Raise HTTP exception
+    except aiohttp.ClientError as e:
+        print(f"Error: Unable to download file from {url}: {e}")
+        raise HTTPException(status_code=500, detail=f"Download failed: {str(e)}")  # Raise HTTP exception
+    except Exception as e: # Catch any other exceptions
+        print(f"An unexpected error occurred: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+    

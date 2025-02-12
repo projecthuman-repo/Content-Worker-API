@@ -1,9 +1,11 @@
 import re
 from typing import Union
-from fastapi import FastAPI, UploadFile ,File ,Response
+from fastapi import FastAPI, UploadFile ,File ,Response, HTTPException
 from pydantic import BaseModel
-from profanity_check import predict
 from contentHandler import contentHandler
+from typing import Optional
+import requests
+import os
 
 from modules.typedetection import router as typedetection_router
 from modules.image_converter import router as image_converter_router
@@ -11,6 +13,14 @@ from modules.video_converter import router as video_converter_router
 from modules.video_framespliter import router as video_framespliter_router
 from modules.image_moderation import router as  image_moderation_router
 from modules.image_ocr import router as  image_ocr_router
+from modules.downloader import downloadFile
+
+
+############
+### TODO ###
+############
+
+#Add Mongo Support after testing url and local path for files
 
 ########################
 ### FILE DESCRIPTION ###
@@ -36,6 +46,7 @@ class ContentDetails(BaseModel):
     documentID: str
     contentUrl: str
     contentDetails: dict
+    FileType: Optional[str] = "unknown"
 
 ##############
 ### ROUTES ###
@@ -55,43 +66,35 @@ def read_root():
 @app.post("/moderate/text")
 def read_root(request: InstantTextVerification):
     stringToCheck = request.text
-    result = predict([stringToCheck])
+    #result = predict([stringToCheck])
+    result = "fail"
 
     # Simple check to see if the check passed or failed
     if (result == [1]):
         return {"result": "fail"}
     else:
         return {"result": "pass"}
-    
 
     
-@app.post("/moderate")
-def read_root(request: ContentDetails):
+@app.post("/moderate/file")
+async def read_root(request: ContentDetails):
     """Returns a JSON Object
     
     The function validates the contentURL coming from the request for validity, then
     calls the contentHandler to offload the moderation part. Based on the result of
     the regex validator, a JSON object is returned.
     """
+
+    content_url = request.contentUrl
+    FileType = request.FileType
+    print("Started")
+    response = await contentHandler(content_url, FileType)
+    return response
     
-    URLValidationREGEX = re.compile(
-        r'^(?:http|ftp)s?://' # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
-        r'localhost|' #localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
-        r'(?::\d+)?' # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-    
-    if re.match(URLValidationREGEX, request.contentUrl):
-        contentHandler(request)
-        
-        return {"validationResult": True}
-    else:
-        return {"validationResult": False}
 
 
 ## Temp Routes for testing type detection and file conversion ##
-app.include_router(typedetection_router) ## Check the File type that is being recieved
+app.include_router(typedetection_router) ## Check the File type that is being recieved return "Unknown" "Vidoe" or "Image"
 app.include_router(image_converter_router) ## Convert the image url to a acceptable type 
 app.include_router(video_converter_router) ## Convert the video to a wav for transcrbing
 app.include_router(video_framespliter_router) ## Split Video frames from image moderation
@@ -104,3 +107,7 @@ app.include_router(image_ocr_router) ## image moderation
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

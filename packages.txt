@@ -6,8 +6,13 @@ Pillow
 moviepy
 opencv-python
 httpx
-tensorflow-macos
-nudepy
+aiohttp
 pytesseract
+nudepy
 SpeechRecognition
+tensorflow-macos
 python-magic-bin==0.4.14
+Pillow
+optree
+tensorflow
+decorator
