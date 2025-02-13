@@ -22,7 +22,7 @@ import cv2
 #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cpu")
 
-MODEL_PATH = r"D:\PHC\VideoMAE\videomae-small-finetuned-kinetics-finetuned-ucf101-subset" # other are base, large
+MODEL_PATH = r"VideoMAE/videomae-small-finetuned-kinetics-finetuned-ucf101-subset" # other are base, large
 
 image_processor = VideoMAEImageProcessor.from_pretrained(MODEL_PATH)
 mean = image_processor.image_mean

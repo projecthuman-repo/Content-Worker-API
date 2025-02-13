@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 
-MODEL_PATH = r'D:\PHC\nsfw_model\merged_trained_nsfw_mobilenet_224x244_30.h5'
+MODEL_PATH = 'Content-Worker-API/image_model/nsfw_model/merged_trained_nsfw_mobilenet_224x244_30.h5'
 
 router = APIRouter()
 
