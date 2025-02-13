@@ -61,6 +61,15 @@ http://127.0.0.1:8000/redoc
 
 ## **Image and Video Moderation usage Docs:**
 
+**Step 1:**
+
+Update the image model path in `Content-Worker-API/modules/image_moderation.py
+`
+
+Update the Video model path in `Content-Worker-API/modules/video_moderation.py`
+
+**Step 2:**
+
 ```
 http://127.0.0.1:8000/moderate/file
 ```
