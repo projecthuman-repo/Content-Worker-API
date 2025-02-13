@@ -45,7 +45,6 @@ class InstantTextVerification(BaseModel):
 class ContentDetails(BaseModel):
     documentID: str
     contentUrl: str
-    contentDetails: dict
     FileType: Optional[str] = "unknown"
 
 ##############
