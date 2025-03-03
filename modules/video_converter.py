@@ -1,7 +1,7 @@
 import shutil
 import requests
 from fastapi import APIRouter, Response
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 router = APIRouter()
 
