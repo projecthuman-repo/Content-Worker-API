@@ -86,7 +86,6 @@ async def read_root(request: ContentDetails):
 
     content_url = request.contentUrl
     FileType = request.FileType
-    print("Started")
     response = await contentHandler(content_url, FileType)
     return response
     

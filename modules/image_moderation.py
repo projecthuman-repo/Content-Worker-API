@@ -7,8 +7,10 @@ import aiohttp
 import numpy as np
 import tensorflow as tf
 import keras
+import os
 
-MODEL_PATH = 'Content-Worker-API/image_model/nsfw_model/merged_trained_nsfw_mobilenet_224x244_30.h5'
+RESULT_API_URL = os.getenv("RESULT_API_URL", "http://localhost:8080/result")
+IMAGE_MODEL_PATH = os.getenv("IMAGE_MODEL_PATH")
 
 router = APIRouter()
 
@@ -34,7 +36,7 @@ def classify_image(image_path: str):
 
 
 
-    model = keras.models.load_model(MODEL_PATH, compile=False)
+    model = keras.models.load_model(IMAGE_MODEL_PATH, compile=False)
 
     predictions = model.predict(img_array)
     # Get the predicted class index
@@ -44,9 +46,21 @@ def classify_image(image_path: str):
     # Get the prediction percentages for all classes
     prediction_percentages = tf.nn.softmax(predictions).numpy()[0] * 100
     formatted_predictions = {class_labels[i]: f"{percentage:.2f}%" for i, percentage in enumerate(prediction_percentages)}
+    
 
-    return {
-    "status": "success",
-    "message": "File processed successfully.",
-    "Result": {"Predicted_class" : Predicted_class, "formatted_predictions" : formatted_predictions}
-  }
+    result_payload = {
+        "documentId": "some-unique-id",  # You need to generate a unique ID
+        "status": "success",
+        "message": "File processed successfully.",
+        "Result": {
+            "Predicted_class": Predicted_class,
+            "outcome": formatted_predictions
+        }
+    }
+
+    # Send the result to localhost:8080/result
+    try:
+        response = requests.post(RESULT_API_URL, json=result_payload)
+        return response.json()  # Return whatever the API responds with
+    except requests.exceptions.RequestException as e:
+        return {"status": "error", "message": f"Failed to send result: {str(e)}"}

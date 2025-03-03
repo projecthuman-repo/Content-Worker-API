@@ -17,14 +17,15 @@ from torchvision.transforms import (
 import random
 from torchvision.io import read_video
 import cv2
-
-
+import os
+import requests
 #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cpu")
+VIDEO_MODEL_PATH = os.getenv("VIDEO_MODEL_PATH")
+RESULT_API_URL = os.getenv("RESULT_API_URL", "http://localhost:8080/result")
 
-MODEL_PATH = r"VideoMAE/videomae-small-finetuned-kinetics-finetuned-ucf101-subset" # other are base, large
 
-image_processor = VideoMAEImageProcessor.from_pretrained(MODEL_PATH)
+image_processor = VideoMAEImageProcessor.from_pretrained(VIDEO_MODEL_PATH)
 mean = image_processor.image_mean
 std = image_processor.image_std
 
@@ -112,7 +113,7 @@ async def predict_video(video_path):
     print(f"Model input shape: {inputs['pixel_values'].shape}")  # Should be [1, C, T, H, W]
     inputs = {k: v.to(device) for k, v in inputs.items()}
     model = VideoMAEForVideoClassification.from_pretrained(
-    MODEL_PATH,
+    VIDEO_MODEL_PATH,
     label2id=label2id,
     id2label=id2label)
     num_frames_to_sample = model.config.num_frames
@@ -137,10 +138,19 @@ async def predict_video(video_path):
         print(f"- {model.config.id2label[i]}: {prob*100:.2f}%")
         formatted_predictions = {class_labels[i]: f"{prob*100:.2f}%"}
 
-    return {
-    "status": "success",
-    "message": "File processed successfully.",
-    "Result": {"Predicted_class" : Predicted_class, "formatted_predictions" : formatted_predictions}
-  }
+    result_payload = {
+        "documentId": "some-unique-id",  # You need to generate a unique ID
+        "status": "success",
+        "message": "File processed successfully.",
+        "Result": {
+            "Predicted_class": Predicted_class,
+            "outcome": formatted_predictions
+        }
+    }
 
-
+    # Send the result to localhost:8080/result
+    try:
+        response = requests.post(RESULT_API_URL, json=result_payload)
+        return response.json()  # Return whatever the API responds with
+    except requests.exceptions.RequestException as e:
+        return {"status": "error", "message": f"Failed to send result: {str(e)}"}
