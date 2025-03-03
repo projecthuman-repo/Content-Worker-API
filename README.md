@@ -63,8 +63,21 @@ http://127.0.0.1:8000/redoc
 
 **Step 1:**
 
-Update the image model path in `Content-Worker-API/modules/image_moderation.py
-`
+Create .env file 
+
+```
+RESULT_API_URL= http://localhost:8080/result
+```
+
+```
+IMAGE_MODEL_PATH = 'Content-Worker-API/image_model/nsfw_model/merged_trained_nsfw_mobilenet_224x244_30.h5'
+```
+
+```
+VIDEO_MODEL_PATH = "VideoMAE/videomae-small-finetuned-kinetics-finetuned-ucf101-subset" # other are base, large
+```
+
+Update the image model path in `Content-Worker-API/modules/image_moderation.py `
 
 Update the Video model path in `Content-Worker-API/modules/video_moderation.py`
 
@@ -77,7 +90,15 @@ http://127.0.0.1:8000/moderate/file
 POST methods should contain the following parameters
 
 ```
-{   "documentID": "12345",   "contentUrl": "bridge.jpg",   "FileType": "image"}
+payload = {
+        documentID: documentID,
+        data : contentURL, #"link to download text or text itself"
+        contentDetails: {
+          contentType: "text", #"placeholder"
+          contentLength:1024, # number of words
+          timestamp: 31/12/1025 #(or something like that) from Date().toISOString()
+        }
+      }
 ```
 
 FileType is optional and can be `image` , `video` or `unknown`
